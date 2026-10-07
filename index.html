@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Betting Site</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎯 Demo Betting Site</h1>
+    <div class="balance">Balance: <span id="balance">1000</span> credits</div>
+  </header>
+
+  <main>
+    <h2>Available Matches</h2>
+    <div id="matches"></div>
+
+    <div id="bet-slip" class="bet-slip">
+      <h3>🎟️ Bet Slip</h3>
+      <p id="slip-empty">No bet selected. Click odds to add one.</p>
+      <div id="slip-content" style="display:none;">
+        <p><strong id="slip-pick"></strong></p>
+        <p>Odds: <span id="slip-odds"></span></p>
+        <label>Stake:
+          <input type="number" id="slip-stake" value="100" min="1">
+        </label>
+        <p>Potential win: <strong id="slip-win"></strong> credits</p>
+        <button id="place-btn">Place Bet</button>
+        <button id="cancel-btn">Cancel</button>
+      </div>
+    </div>
+
+    <div class="message"></div>
+
+    <section id="history-section"></section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
