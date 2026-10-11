@@ -1,39 +1,152 @@
+/* ============ RESET & VARIABLES ============ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
 }
+
+:root {
+  --bg:        #0a0a0f;
+  --surface:   #12121a;
+  --surface-2: #1a1a24;
+  --border:    #26263a;
+  --primary:   #00e5ff;
+  --secondary: #a855f7;
+  --accent:    #ff2e97;
+  --success:   #22ffa0;
+  --warning:   #f59e0b;
+  --danger:    #ff4d6d;
+  --text:      #e8e8f0;
+  --muted:     #6b6b80;
+
+  --glow-cyan:   0 0 20px rgba(0, 229, 255, 0.45);
+  --glow-violet: 0 0 20px rgba(168, 85, 247, 0.45);
+  --glow-green:  0 0 20px rgba(34, 255, 160, 0.45);
+  --glow-pink:   0 0 20px rgba(255, 46, 151, 0.45);
+
+  --radius: 14px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; }
 
 body {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
 }
 
+/* ============ ANIMATED BACKGROUND ============ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 75%);
+          mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0, 229, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.18), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(255, 46, 151, 0.12), transparent 45%);
+  filter: blur(40px);
+  animation: floatGlow 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes floatGlow {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -3%, 0) scale(1.08); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.03); }
+}
+
+/* keep content above background */
+header, main { position: relative; z-index: 1; }
+
+/* ============ HEADER ============ */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background: #1e293b;
-  border-bottom: 2px solid #334155;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-h1 { font-size: 1.5rem; }
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
 
 .balance {
-  background: #22c55e;
-  color: #052e16;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: bold;
+  background: linear-gradient(135deg, var(--success), var(--primary));
+  color: #0a0a0f;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  box-shadow: var(--glow-green);
+  transition: var(--transition);
+}
+.balance:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(34, 255, 160, 0.7);
 }
 
-main { padding: 40px; }
+/* ============ MAIN ============ */
+main {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-h2 { margin-bottom: 20px; }
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, #fff, var(--primary) 60%, var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
+/* ============ MATCHES ============ */
 #matches {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -41,14 +154,55 @@ h2 { margin-bottom: 20px; }
 }
 
 .match {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
+  position: relative;
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 20px;
+  overflow: hidden;
+  transition: var(--transition);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.7s forwards;
 }
 
-.match h3 { margin-bottom: 12px; font-size: 1.1rem; }
+.match::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
 
+.match:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), var(--glow-violet);
+}
+.match:hover::before { opacity: 1; }
+
+.match h3 {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ ODDS ============ */
 .odds {
   display: flex;
   gap: 10px;
@@ -58,84 +212,195 @@ h2 { margin-bottom: 20px; }
 .odds button {
   flex: 1;
   padding: 10px;
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #3b82f6;
-  color: white;
-  font-weight: bold;
+  background: var(--surface);
+  color: var(--primary);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
-.odds button:hover { background: #2563eb; }
+.odds button:hover {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #0a0a0f;
+  border-color: transparent;
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
+}
 
+.odds button:active { transform: scale(0.96); }
+
+/* ============ MESSAGE ============ */
 .message {
   margin-top: 20px;
-  padding: 12px;
-  border-radius: 8px;
-  background: #1e293b;
-  border-left: 4px solid #22c55e;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border-left: 4px solid var(--success);
+  font-weight: 600;
+  font-size: 0.95rem;
   display: none;
+  animation: fadeUp 0.4s ease-out;
 }
+.message:not(:empty) { display: block; }
 
+/* ============ BET SLIP ============ */
 .bet-slip {
   margin-top: 40px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 400px;
+  background: linear-gradient(160deg, rgba(26, 26, 36, 0.95), rgba(18, 18, 26, 0.95));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  max-width: 440px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  transition: var(--transition);
 }
 
-.bet-slip h3 { margin-bottom: 12px; }
+.bet-slip:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), var(--glow-violet);
+}
+
+.bet-slip h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
 
 .bet-slip input {
-  width: 80px;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e2e8f0;
+  width: 100px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
   margin-left: 8px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.bet-slip input:focus {
+  border-color: var(--primary);
+  box-shadow: var(--glow-cyan);
 }
 
 .bet-slip button {
-  margin-top: 12px;
+  margin-top: 14px;
   margin-right: 8px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
-#place-btn { background: #22c55e; color: #052e16; }
-#cancel-btn { background: #64748b; color: white; }
+#place-btn {
+  background: linear-gradient(135deg, var(--success), var(--primary));
+  color: #0a0a0f;
+  box-shadow: var(--glow-green);
+}
+#place-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(34, 255, 160, 0.7);
+}
+#place-btn:active { transform: scale(0.97); }
 
+#cancel-btn {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+#cancel-btn:hover {
+  color: var(--text);
+  border-color: var(--danger);
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.35);
+}
+
+/* ============ RESOLVE BUTTON ============ */
 .resolve-btn {
   margin-top: 12px;
-  padding: 8px 14px;
-  background: #f59e0b;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--warning), var(--accent));
   color: #1c1917;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   cursor: pointer;
   width: 100%;
+  transition: var(--transition);
+  box-shadow: 0 0 0 rgba(245, 158, 11, 0);
 }
 
-.resolve-btn:hover { background: #d97706; }
+.resolve-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
+}
+.resolve-btn:active { transform: scale(0.98); }
 
+/* ============ RESOLVED TAG ============ */
 .resolved {
   display: inline-block;
   margin-top: 12px;
   padding: 6px 12px;
-  background: #334155;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #94a3b8;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.04em;
 }
 
-.bet-win  { border-left: 4px solid #22c55e; padding-left: 10px; }
-.bet-loss { border-left: 4px solid #ef4444; padding-left: 10px; }
-.bet-pending { border-left: 4px solid #f59e0b; padding-left: 10px; }
+/* ============ BET HISTORY STATES ============ */
+.bet-win {
+  border-left: 4px solid var(--success);
+  padding-left: 10px;
+  box-shadow: inset 4px 0 20px -12px rgba(34, 255, 160, 0.6);
+}
+.bet-loss {
+  border-left: 4px solid var(--danger);
+  padding-left: 10px;
+  box-shadow: inset 4px 0 20px -12px rgba(255, 77, 109, 0.6);
+}
+.bet-pending {
+  border-left: 4px solid var(--warning);
+  padding-left: 10px;
+  box-shadow: inset 4px 0 20px -12px rgba(245, 158, 11, 0.6);
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--primary), var(--secondary));
+  border-radius: 10px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  header { padding: 16px 20px; }
+  h1 { font-size: 1.2rem; }
+  main { padding: 24px 16px; }
+  .bet-slip { padding: 18px; }
+}
